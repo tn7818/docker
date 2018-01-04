@@ -43,9 +43,9 @@ expect {
 
         "IS THIS CORRECT? (Y/N):\ " {send "Y\r";exp_continue}
 
-        "ENTER THE NUMBER OF THE DESIRED CHOICE*\ " {send "$SERVER_TYPE\r";exp_continue}
+        "ENTER THE NUMBER OF THE DESIRED CHOICE*\ " {send "$SERVER_MODE\r";exp_continue}
 
-        "ENTER THE NUMBER FOR THE INSTALL SET*\ " {send "$SERVER_MODE\r";exp_continue}
+        "ENTER THE NUMBER FOR THE INSTALL SET*\ " {send "$SERVER_TYPE\r";exp_continue}
 
         "Enter the JDK path (DEFAULT: *):\ " {send "$JAVA_HOME\r";exp_continue}
 
