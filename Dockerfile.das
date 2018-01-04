@@ -45,7 +45,7 @@ RUN tar zxf $USER_HOME/binary/jdk1.7.0_80_linux_x64.tar.gz -C $USER_HOME/ && \
     echo -e "#######UPAS_HOME 7.0 Fix3#########\nexport UPAS_HOME=$UPAS_HOME\nexport PATH=$UPAS_HOME/bin:$UPAS_HOME/lib/system:$PATH\nexport UPAS_DOMAIN=$UPAS_DOMAIN\nalias ua='$UPAS_HOME/bin/upasadmin -domain $UPAS_DOMAIN -host `hostname` -port $DAS_PORT -u administrator -p $UPAS_PWD '\nalias ucfg='cd $UPAS_HOME/domains/$UPAS_DOMAIN/config'\nalias dstart='$UPAS_HOME/bin/startDomainAdminServer -domain $UPAS_DOMAIN -u administrator -p $UPAS_PWD &'\nalias dstop='$UPAS_HOME/bin/stopServer -host `hostname`:$DAS_PORT -u administrator -p $UPAS_PWD'\nalias slogs='cd $UPAS_HOME/domains/$UPAS_DOMAIN/servers'" >> $USER_HOME/.bash_profile && \
 #Create UPAS Start/Stop Shell Scripts
      echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startDomainAdminServer -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/dboot && \
-     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startNodeManager -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD} >> $USER_HOME/binary/nm.log'\n " > $USER_HOME/binary/nboot && \
+     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/stopServer -host `hostname`:${DAS_PORT} -u administrator -p ${UPAS_PWD}  >>  $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/ddown && \
 #Change UPAS HOME Files Owner
     chown $USER_NAME:$USER_NAME -R $USER_HOME && \
     chmod 750 $USER_HOME/binary/* && \
