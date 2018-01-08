@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: upas-das-svc
+  labels:
+    service: das
+spec:
+  selector:
+    app: das
+  ports:
+  - name: baseport
+    nodePort: 32736
+    protocol: TCP
+    port: 9736
+    targetPort: 9736
+  type: NodePort
