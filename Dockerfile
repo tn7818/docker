@@ -17,13 +17,10 @@ ENV PATH=$UPAS_HOME/bin:$UPAS_HOME/lib/system:$JAVA_HOME/bin:$PATH
 
 
 # Install Shell Expect Support
-RUN yum install -y tar* passwd* expect openssh-server && \
+RUN yum install -y tar* passwd* expect && \
     yum clean all && \
 # Change System Params
     echo -e "upas  soft    nofile  32768\nupas  hard    nofile  65536\nupas  soft    noproc  2048\nupas  hard    noproc  4096" >> /etc/security/limit.conf && \
-    echo -e "PermitRootLogin yes\nRSAAuthentication yes\nPubkeyAuthentication yes\nAuthorizedKeysFile      .ssh/authorized_keys\n" >> /etc/ssh/sshd_config && \
-    service sshd restart && \
-    chkconfig sshd on && \
 #Create UPAS User && Set userPassword
     useradd -d $USER_HOME $USER_NAME && \
     echo "$USER_NAME" |passwd --stdin $USER_NAME
@@ -32,7 +29,7 @@ RUN yum install -y tar* passwd* expect openssh-server && \
 COPY files/jdk1.7.0_80_linux_x64.tar.gz \
      files/upas70fix3_unix_generic_zh_20161121.bin \
      files/UPAS70fix3_lib_Patch_20170816.tar.gz \
-     files/install.sh $USER_HOME/binary/
+     files/install.sh files/nodeCheck.sh $USER_HOME/binary/
 
 #Install  JDK && UPAS && PATCH
 RUN tar zxf $USER_HOME/binary/jdk1.7.0_80_linux_x64.tar.gz -C $USER_HOME/ && \
@@ -47,8 +44,8 @@ RUN tar zxf $USER_HOME/binary/jdk1.7.0_80_linux_x64.tar.gz -C $USER_HOME/ && \
     echo -e "#####JAVA_HOME##########\nexport JAVA_HOME=$USER_HOME/jdk1.7.0_80\nexport PATH=$JAVA_HOME/bin:$PATH\n" >> $USER_HOME/.bash_profile && \
     echo -e "#######UPAS_HOME 7.0 Fix3#########\nexport UPAS_HOME=$UPAS_HOME\nexport PATH=$UPAS_HOME/bin:$UPAS_HOME/lib/system:$PATH\nexport UPAS_DOMAIN=$UPAS_DOMAIN\nalias ua='$UPAS_HOME/bin/upasadmin -domain $UPAS_DOMAIN -host `hostname` -port $DAS_PORT -u administrator -p $UPAS_PWD '\nalias ucfg='cd $UPAS_HOME/domains/$UPAS_DOMAIN/config'\nalias dstart='$UPAS_HOME/bin/startDomainAdminServer -domain $UPAS_DOMAIN -u administrator -p $UPAS_PWD &'\nalias dstop='$UPAS_HOME/bin/stopServer -host `hostname`:$DAS_PORT -u administrator -p $UPAS_PWD'\nalias nstart='$UPAS_HOME/bin/startNodeManager -domain $UPAS_DOMAIN -u administrator -p $UPAS_PWD &'\nalias nstop='$UPAS_HOME/bin/stopNodeManager -host `hostname` -port $NM_PORT'\nalias slogs='cd $UPAS_HOME/domains/$UPAS_DOMAIN/servers'" >> $USER_HOME/.bash_profile && \
 #Create UPAS Start/Stop Shell Scripts
-     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nservice sshd restart \nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startDomainAdminServer -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/dboot && \
-     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nservice sshd restart \nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startNodeManager -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD} >> $USER_HOME/binary/nm.log'\n " > $USER_HOME/binary/nboot && \
+     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startDomainAdminServer -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/dboot && \
+     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startNodeManager -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD} >> $USER_HOME/binary/nm.log'\n " > $USER_HOME/binary/nboot && \
      echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/stopServer -host `hostname`:${DAS_PORT} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/ddown && \
      echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startNodeManager -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD} >> $USER_HOME/binary/nm.log'\n" > $USER_HOME/binary/ndown && \
 #Change UPAS HOME Files Owner
@@ -63,12 +60,12 @@ RUN tar zxf $USER_HOME/binary/jdk1.7.0_80_linux_x64.tar.gz -C $USER_HOME/ && \
     source $USER_HOME/.bash_profile
 
 #Set Listen Port
-EXPOSE 22 9736 7730 8088
+EXPOSE 9736 7730 8088
 
 #Change User && Workdir
 #USER $USER_NAME
 #WORKDIR $USER_HOME
 
 #Start UPAS Service
-ENTRYPOINT  /home/upas/binary/dboot && /home/upas/binary/nboot
+ENTRYPOINT  /home/upas/binary/nodeCheck.sh && /home/upas/binary/dboot && /home/upas/binary/nboot
 
