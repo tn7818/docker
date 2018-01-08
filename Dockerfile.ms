@@ -29,7 +29,7 @@ RUN yum install -y tar* passwd* expect && \
 COPY files/jdk1.7.0_80_linux_x64.tar.gz \
      files/upas70fix3_unix_generic_zh_20161121.bin \
      files/UPAS70fix3_lib_Patch_20170816.tar.gz \
-     files/install.sh $USER_HOME/binary/
+     files/install.sh files/nodeCheck.sh $USER_HOME/binary/
 
 #Install  JDK && UPAS && PATCH
 RUN tar zxf $USER_HOME/binary/jdk1.7.0_80_linux_x64.tar.gz -C $USER_HOME/ && \
@@ -65,5 +65,5 @@ EXPOSE 9936 7730 8088
 #WORKDIR $USER_HOME
 
 #Start UPAS Service
-ENTRYPOINT  /home/upas/binary/nboot
+ENTRYPOINT  /home/upas/binary/nodeCheck.sh && /home/upas/binary/nboot
 
