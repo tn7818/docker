@@ -1,4 +1,4 @@
-Docker Container Auto Install UPAS 
+# Docker Container Auto Install UPAS 
 
 OS: CentOS 6.7
 
@@ -16,9 +16,7 @@ UPAS Service Start/Stop: uboot/udown
 
 
 
-OS UPAS User profile Added 
-
-##########DOCKER Profile Alias Setting#################
+# ##########DOCKER Profile Alias Setting#################
 # Kill All Running Containers
 alias dockerkill='docker kill $(docker ps -a -q)'
  
@@ -33,7 +31,7 @@ alias dockerclean='dockercleanc || true && dockercleani'
 
 
 
-###########K8S_Config For UPAS7.0 Fix3#############
+# ###########K8S_Config For UPAS7.0 Fix3#############
 # Create UPAS7.0Fix3 Images
 docker build -t registry.clstest.com:5000/library/iop/upas/das:1.0 -f ./dockerfiles/upas/Dockerfile.das
 docker build -t registry.clstest.com:5000/library/iop/upas/ms:1.0 -f ./dockerfiles/upas/Dockerfile.ms
@@ -44,22 +42,23 @@ docker build -t registry.clstest.com:5000/library/iop/upas/nfs:1.0 -f ./dockerfi
 # Create UPAS7.0Fix3 Volumes Service
 kubectl create -f ./nfs/nfs-server-svc.yaml
 
-#Create UPAS7.0Fix3 Volumens Deploy
+# Create UPAS7.0Fix3 Volumens Deploy
 kubectl create -f ./nfs/nfs-server-deploy.yaml
 
-#Create UPAS7.0Fix3 Persistent Volumens
+# Create UPAS7.0Fix3 Persistent Volumens
 kubectl create -f ./nfs/nfs-pv.yaml
 
-#Create UPAS7.0Fix3 Persistent Volumens Claims
+# Create UPAS7.0Fix3 Persistent Volumens Claims
 kubectl create -f ./nfs/nfs-pvc.yaml
 
-#Create UPAS7.0Fix3 ConfigMap(UPAS User Profile : linuxprofile)
+# Create UPAS7.0Fix3 ConfigMap(UPAS User Profile : linuxprofile)
 kubectl create configmap linuxprofile --from-file=das=./configMap/dasLinuxProfile --from-file=ms=./configMap/msLinuxProfile
 
-#Create UPAS7.0Fix3 Service
+# Create UPAS7.0Fix3 Service
 kubectl create -f ./upas_das_svc.yaml
 kubectl create -f ./upas_ms_svc.yaml
 
-#Create UPAS7.0Fix3 Deploy
+# Create UPAS7.0Fix3 Deploy
 kubectl create -f ./upas_das_deploy.yaml
 kubectl create -f ./upas_das_deploy.yaml
+
