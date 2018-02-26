@@ -34,14 +34,14 @@ alias dockerclean='dockercleanc || true && dockercleani'
 
 
 ###########K8S_Config For UPAS7.0 Fix3#############
-#Create UPAS7.0Fix3 Images
+# Create UPAS7.0Fix3 Images
 docker build -t registry.clstest.com:5000/library/iop/upas/das:1.0 -f ./dockerfiles/upas/Dockerfile.das
 docker build -t registry.clstest.com:5000/library/iop/upas/ms:1.0 -f ./dockerfiles/upas/Dockerfile.ms
 
-#Create UPAS7.0Fix3 Volumes Images(NFS)
+# Create UPAS7.0Fix3 Volumes Images(NFS)
 docker build -t registry.clstest.com:5000/library/iop/upas/nfs:1.0 -f ./dockerfiles/nfs/Dockerfile.nfs
 
-#Create UPAS7.0Fix3 Volumes Service
+# Create UPAS7.0Fix3 Volumes Service
 kubectl create -f ./nfs/nfs-server-svc.yaml
 
 #Create UPAS7.0Fix3 Volumens Deploy
