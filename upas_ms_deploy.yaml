@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: upas-ms-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: perbank
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: slave1
+      containers:
+      - name: upas-ms
+        image: registry.clstest.com:5000/library/iop/upas/ms:1.0
+        imagePullPolicy: Always
+        command: ['/bin/bash', '-c', '$USER_HOME/binary/nodeCheck.sh;$USER_HOME/binary/nboot']
+        ports:
+        - name: heartport
+          containerPort: 3030
+        - name: baseport
+          containerPort: 9936
+        - name: httpport
+          containerPort: 8088
+        - name: nodeport
+          containerPort: 7730

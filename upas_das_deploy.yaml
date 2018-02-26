@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: upas-das-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: das
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: master1
+      containers:
+      - name: upas-das
+        image: registry.clstest.com:5000/library/iop/upas/das:1.0
+        imagePullPolicy: Always
+        command: ['/bin/bash', '-c', 'cat /etc/config/das_linux_profile > $USER_HOME/.bash_profile;$USER_HOME/binary/dboot;$USER_HOME/binary/nodeCheck.sh;tail -f $USER_HOME/binary/*.log']
+        ports:
+        - name: heartport
+          containerPort: 3030
+        - name: baseport
+          containerPort: 9736
+        volumeMounts:
+         - name: domainconfig
+           mountPath: /etc/config/
+#         - name: nfs
+#           mountPath: /home/upas/
+
+      volumes:
+      - name: domainconfig
+        configMap:
+          name: linuxprofile
+          items:
+          - key: das
+            path: das_linux_profile
+          - key: ms
+            path: ms_linux_profile
+#      - name: nfs
+#        persistentVolumeClaim:
+#          claimName: nfsclaim
+

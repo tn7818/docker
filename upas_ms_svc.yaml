@@ -1,0 +1,31 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: upas-app-svc
+  labels:
+    service: perbank
+spec:
+  selector:
+    app: perbank
+  ports:
+  - name: heartport
+    #nodePort: 33030
+    protocol: UDP
+    port: 3030
+    targetPort: 3030
+  - name: baseport
+    #nodePort: 32084
+    protocol: TCP
+    port: 9936
+    targetPort: 9936
+  - name: httpport
+    #nodePort: 32421
+    protocol: TCP
+    port: 8088
+    targetPort: 8088
+  - name: nodeport
+    #nodePort: 32434
+    protocol: TCP
+    port: 7730
+    targetPort: 7730
+  #type: NodePort
