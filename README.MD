@@ -16,7 +16,7 @@ UPAS Service Start/Stop: uboot/udown
 
 
 
-# ##########DOCKER Profile Alias Setting#################
+# #########DOCKER Profile Alias Setting##############
 # Kill All Running Containers
 alias dockerkill='docker kill $(docker ps -a -q)'
  
