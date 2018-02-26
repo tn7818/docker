@@ -1,0 +1,30 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/bin
+
+export LANG=en_US.UTF-8
+
+#####JAVA_HOME##########
+export JAVA_HOME=/home/upas/jdk1.7.0_80
+export PATH=$JAVA_HOME/bin:$PATH
+
+#######UPAS_HOME 7.0 Fix3#########
+export UPAS_HOME=/home/upas/upas7
+export PATH=$UPAS_HOME/bin:$UPAS_HOME/lib/system:$PATH
+export UPAS_DOMAIN=upas_domain
+export DAS_PORT=9736
+export NM_PORT=7730
+export UPAS_USR=administrator
+export UPAS_PWD=upasadmin
+alias ua='/home/upas/upas7/bin/upasadmin -domain $UPAS_DOMAIN -host `hostname` -port $DAS_PORT -u $UPAS_USR -p $UPAS_PWD '
+alias ucfg='cd $UPAS_HOME/domains/$UPAS_DOMAIN/config'
+alias nstart='$UPAS_HOME/bin/startNodeManager -domain $UPAS_DOMAIN -u $UPAS_USR -p $UPAS_PWD &'
+alias nstop='$UPAS_HOME/bin/stopNodeManager -host `hostname` -port $NM_PORT '
+alias slogs='cd $UPAS_HOME/domains/$UPAS_DOMAIN/servers'
