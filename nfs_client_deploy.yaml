@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-client-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nfs-client
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: master1
+      containers:
+      - name: nfs-client
+        image: registry.clstest.com:5000/library/iop/nfs-client-alpine:1.0
+        imagePullPolicy: Always
+#        command: ['sh', '-c', 'sleep 3000']
+        ports:
+        - name: heartport
+          containerPort: 3030
+        - name: baseport
+          containerPort: 9736
+        securityContext:
+          privileged: true
+        volumeMounts:
+         - name: nfs
+           mountPath: /home/upas/app
+
+      volumes:
+      - name: nfs
+        persistentVolumeClaim:
+          claimName: nfsclaim
+#        nfs:
+#          server: 10.233.104.119
+#          path: /
+              

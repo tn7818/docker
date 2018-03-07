@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-server-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        role: nfs-server-deploy
+    spec:
+     nodeSelector:
+        kubernetes.io/hostname: master1 
+     containers:
+      - name: nfs-server
+        image: registry.clstest.com:5000/library/iop/nfs-server-alpine:1.0
+        imagePullPolicy: Always
+        ports:
+          - name: nfs
+            containerPort: 2049
+        securityContext:
+          privileged: true
+        env:
+          - name: SHARED_DIRECTORY
+            value: /app
+        volumeMounts:
+          - mountPath: /app
+            name: app-volume
+     
+     volumes:
+      - name: app-volume
+        hostPath:
+          path: /root/share/app
