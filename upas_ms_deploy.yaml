@@ -15,7 +15,11 @@ spec:
       - name: upas-ms
         image: registry.clstest.com:5000/library/iop/upas/ms:1.0
         imagePullPolicy: Always
-        command: ['/bin/bash', '-c', '$USER_HOME/binary/nodeCheck.sh;$USER_HOME/binary/nboot']
+#UPAS Profile Setting: cat /etc/config/ms_linux_profile > $USER_HOME/.bash_profile 
+#NodeCheck( param: 1->logfile ): $USER_HOME/binary/nodeCheck.sh /home/upas/binary/nodeLost
+#ServerConfig( param: 1->logfile 2->ModelServerName 3->NewServerName ): $USER_HOME/binary/serverConfig.sh /home/upas/binary/serverList ModelServerName NewServerName
+#ClusterConfig( param: 1->logfile 2->clusterName 3->serverName ): $USER_HOME/binary/clusterConfig.sh /home/upas/binary/clusterList clusterName serverName;
+        command: ['/bin/bash', '-c', 'cat /etc/config/das_linux_profile > $USER_HOME/.bash_profile;$USER_HOME/binary/nodeCheck.sh;$USER_HOME/binary/serverConfig.sh;$USER_HOME/binary/nboot']
         ports:
         - name: heartport
           containerPort: 3030
@@ -25,3 +29,22 @@ spec:
           containerPort: 8088
         - name: nodeport
           containerPort: 7730
+        volumeMounts:
+         - name: domainconfig
+           mountPath: /etc/config/
+         - name: nfs
+           mountPath: /home/upas/app
+
+      volumes:
+      - name: domainconfig
+        configMap:
+          name: linuxprofile
+          items:
+          - key: das
+            path: das_linux_profile
+          - key: ms
+            path: ms_linux_profile
+      - name: nfs
+        persistentVolumeClaim:
+          claimName: nfsclaim
+
