@@ -37,7 +37,7 @@ docker build -t registry.clstest.com:5000/library/iop/upas/das:1.0 -f ./dockerfi
 docker build -t registry.clstest.com:5000/library/iop/upas/ms:1.0 -f ./dockerfiles/upas/Dockerfile.ms
 
 # Create UPAS7.0Fix3 Volumes Images(NFS)
-docker build -t registry.clstest.com:5000/library/iop/upas/nfs:1.0 -f ./dockerfiles/nfs/Dockerfile.nfs
+docker build -t registry.clstest.com:5000/library/iop/nfs-server-alpine -f ./dockerfiles/nfs/Alpine3.7/nfs-server/Dockerfile.nfs
 
 # Create UPAS7.0Fix3 Volumes Service
 kubectl create -f ./nfs/nfs-server-svc.yaml
