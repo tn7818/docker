@@ -13,4 +13,5 @@
    storageClassName: slow
    nfs:
      path: /
+	 #Changed the Service IP
      server: 10.233.0.229
