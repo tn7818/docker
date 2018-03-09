@@ -41,7 +41,7 @@ RUN yum install -y tar* passwd* nfs-utils rpcbind expect && \
 
 #Create UPAS Start/Stop Shell Scripts
      echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startNodeManager -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD} >> $USER_HOME/binary/nm.log'\n " > $USER_HOME/binary/nboot && \
-     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startNodeManager -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD} >> $USER_HOME/binary/nm.log'\n" > $USER_HOME/binary/ndown && \
+     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/stopNodeManager -host \`hostname\` -port ${NM_PORT} >> $USER_HOME/binary/nm.log'\n" > $USER_HOME/binary/ndown && \
 #Change UPAS HOME Files Owner
     chown $USER_NAME:$USER_NAME -R $USER_HOME && \
     chmod 750 $USER_HOME/binary/* && \
