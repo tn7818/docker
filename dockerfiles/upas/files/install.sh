@@ -49,6 +49,8 @@ expect {
 
         "Enter the JDK path (DEFAULT: *):\ " {send "$JAVA_HOME\r";exp_continue}
 
+        "Enter the Password *" {sleep 2;send "$DAS_PWD\r";exp_continue}
+
         "Input Password::\ " {send "$DAS_PWD\r";exp_continue}
 
         "Corfirm Password::\ " {send "$DAS_PWD\r";exp_continue}
