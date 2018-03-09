@@ -42,7 +42,7 @@ RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpin
 
 #Create UPAS Start/Stop Shell Scripts
      echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/startDomainAdminServer -domain ${UPAS_DOMAIN} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/dboot && \
-     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/stopServer -host `hostname`:${DAS_PORT} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/ddown && \
+     echo -e "#!/bin/bash\n\n\nexport LANG=$LANG\nsu - $USER_NAME -c 'nohup ${UPAS_HOME}/bin/stopServer -host \`hostname\`:${DAS_PORT} -u administrator -p ${UPAS_PWD}  >> $USER_HOME/binary/das.log'\n " > $USER_HOME/binary/ddown && \
 #Change UPAS HOME Files Owner
     chown $USER_NAME:$USER_NAME -R $USER_HOME && \
     chmod 750 $USER_HOME/binary/* && \
