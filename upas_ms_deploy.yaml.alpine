@@ -1,48 +1,52 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: upas-das-deploy
+  name: upas-ms-alpine-deploy
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: das
+        app: perbank
     spec:
       nodeSelector:
-        kubernetes.io/hostname: master1
+        kubernetes.io/hostname: slave1
       restartPolicy: Always
       containers:
-      - name: upas-das
-        image: registry.clstest.com:5000/library/iop/upas/das:1.0
+      - name: upas-ms
+        image: registry.clstest.com:5000/library/iop/upas/alpine/ms:1.0
         imagePullPolicy: Always
 #UPAS Profile Setting: cat /etc/config/ms_linux_profile > $USER_HOME/.bash_profile 
-#NodeCheck( param: 1->lifeFlag 2->logfile ): $USER_HOME/binary/nodeCheck.sh 1 /home/upas/binary/nodeLost
-#ServerConfig( param: 1->lifeFlag 2->logfile 3->ModelServerName 4->NewServerName ): $USER_HOME/binary/serverConfig.sh 1 /home/upas/binary/serverList ModelServerName NewServerName
-#ClusterConfig( param: 1->lfieFlag 2->logfile 3->clusterName 4->serverName ): $USER_HOME/binary/clusterConfig.sh 1 /home/upas/binary/clusterList clusterName serverName;
-        command: ['/bin/bash', '-c', 'cat /etc/config/das_linux_profile > $USER_HOME/.bash_profile;$USER_HOME/binary/dboot;$USER_HOME/binary/nodeCheck.sh 1;tail -f $USER_HOME/binary/*.log']
+#NodeCheck( param: 1->logfile ): $USER_HOME/binary/nodeCheck.sh /home/upas/binary/nodeLost
+#ServerConfig( param: 1->logfile 2->ModelServerName 3->NewServerName ): $USER_HOME/binary/serverConfig.sh /home/upas/binary/serverList ModelServerName NewServerName
+#ClusterConfig( param: 1->logfile 2->clusterName 3->serverName ): $USER_HOME/binary/clusterConfig.sh /home/upas/binary/clusterList clusterName serverName;
+        command: ['/bin/bash', '-c', 'cat /etc/config/das_linux_profile > $USER_HOME/.bash_profile;$USER_HOME/binary/nodeCheck.sh 1;$USER_HOME/binary/serverConfig.sh 1 ;$USER_HOME/binary/nboot']
         ports:
         - name: heartport
           containerPort: 3030
         - name: baseport
-          containerPort: 9736
+          containerPort: 9936
+        - name: httpport
+          containerPort: 8088
+        - name: nodeport
+          containerPort: 7730
         lifecycle:
           preStop:
              exec:
                command: ['/bin/bash','-c','$USER_HOME/binary/serverConfig.sh 2;$USER_HOME/binary/nodeCheck.sh 2']
-        livenessProbe:
-          httpGet:
+#        livenessProbe:
+#          httpGet:
 #            host: IP Address (default Pod IP)
 #            scheme: HTTP (default HTTP / HTTPS)
-            path: /webadmin
-            port: 9736
-          initialDelaySeconds: 30
-          timeoutSeconds: 1
+#            path: /app
+#            port: 8088
+#          initialDelaySeconds: 30
+#          timeoutSeconds: 1
 #          tcpSocket:
 #            host:  IP Address (default Pod IP)
-#            port: 9736            
-#          timeoutSeconds: 1          
-
+#            port: 7730
+#          initialDelaySeconds: 30 
+#          timeoutSeconds: 1
         volumeMounts:
          - name: domainconfig
            mountPath: /etc/config/
@@ -62,7 +66,3 @@ spec:
         persistentVolumeClaim:
           claimName: nfsclaim
 
-#        nfs:
-#          server: 10.233.104.97
-#          path: /app
-              

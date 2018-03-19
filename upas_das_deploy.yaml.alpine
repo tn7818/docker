@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: upas-das-deploy
+  name: upas-das-alpine-deploy
 spec:
   replicas: 1
   template:
@@ -14,7 +14,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: upas-das
-        image: registry.clstest.com:5000/library/iop/upas/das:1.0
+        image: registry.clstest.com:5000/library/iop/upas/alpine/das:1.0
         imagePullPolicy: Always
 #UPAS Profile Setting: cat /etc/config/ms_linux_profile > $USER_HOME/.bash_profile 
 #NodeCheck( param: 1->lifeFlag 2->logfile ): $USER_HOME/binary/nodeCheck.sh 1 /home/upas/binary/nodeLost

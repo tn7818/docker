@@ -11,6 +11,7 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/hostname: slave1
+      restartPolicy: Always
       containers:
       - name: upas-ms
         image: registry.clstest.com:5000/library/iop/upas/ms:1.0
@@ -19,7 +20,7 @@ spec:
 #NodeCheck( param: 1->logfile ): $USER_HOME/binary/nodeCheck.sh /home/upas/binary/nodeLost
 #ServerConfig( param: 1->logfile 2->ModelServerName 3->NewServerName ): $USER_HOME/binary/serverConfig.sh /home/upas/binary/serverList ModelServerName NewServerName
 #ClusterConfig( param: 1->logfile 2->clusterName 3->serverName ): $USER_HOME/binary/clusterConfig.sh /home/upas/binary/clusterList clusterName serverName;
-        command: ['/bin/bash', '-c', 'cat /etc/config/das_linux_profile > $USER_HOME/.bash_profile;$USER_HOME/binary/nodeCheck.sh;$USER_HOME/binary/serverConfig.sh;$USER_HOME/binary/nboot']
+        command: ['/bin/bash', '-c', 'cat /etc/config/das_linux_profile > $USER_HOME/.bash_profile;$USER_HOME/binary/nodeCheck.sh 1;$USER_HOME/binary/serverConfig.sh 1 ;$USER_HOME/binary/nboot']
         ports:
         - name: heartport
           containerPort: 3030
@@ -29,6 +30,23 @@ spec:
           containerPort: 8088
         - name: nodeport
           containerPort: 7730
+        lifecycle:
+          preStop:
+             exec:
+               command: ['/bin/bash','-c','$USER_HOME/binary/serverConfig.sh 2;$USER_HOME/binary/nodeCheck.sh 2']
+#        livenessProbe:
+#          httpGet:
+#            host: IP Address (default Pod IP)
+#            scheme: HTTP (default HTTP / HTTPS)
+#            path: /app
+#            port: 8088
+#          initialDelaySeconds: 30
+#          timeoutSeconds: 1
+#          tcpSocket:
+#            host:  IP Address (default Pod IP)
+#            port: 7730
+#          initialDelaySeconds: 30 
+#          timeoutSeconds: 1
         volumeMounts:
          - name: domainconfig
            mountPath: /etc/config/
