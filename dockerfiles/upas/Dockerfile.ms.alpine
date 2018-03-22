@@ -13,7 +13,7 @@ ENV UPAS_HOME=$USER_HOME/upas7 UPAS_DOMAIN=upas_domain DAS_PORT=9736 NM_PORT=773
 ENV PATH=$UPAS_HOME/bin:$UPAS_HOME/lib/system:$JAVA_HOME/bin:$PATH
 
 # Install Shell Expect Support
-RUN echo -e "http://dl-cdn.alpinelinux.org/alpine/edge/main\nhttp://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+RUN echo -e "http://dl-3.alpinelinux.org/alpine/edge/main\nhttp://dl-3.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk add --update --verbose bash curl nfs-utils rpcbind expect openjdk8 && \
     rm -rf /var/cache/apk/* /tmp/* && \
     rm -f /sbin/halt /sbin/poweroff /sbin/reboot && \
