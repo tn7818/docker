@@ -1,6 +1,6 @@
 # Docker Container Auto Install UPAS 
 
-OS: CentOS 6.7
+OS: CentOS 6.7 & Alpine 3.7
 
 OS Ext Function: tar passwd expect(For UPAS Install.sh) openssh-server 
 
